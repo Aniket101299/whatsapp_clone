@@ -1,0 +1,22 @@
+.sidebar{
+    display: flex;
+    flex-direction: column;
+    flex: 0.35;
+}
+.sidebar_header{
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    border-right: 1px solid lightgray;
+}
+.sidebar_headerRight{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-width: 10vw;
+}
+/* .MuiSvgIcon-root default className given to icons in material ui */
+.sidebar_headerRight > .MuiSvgIcon-root{  
+    margin-left: 2vw;;
+    font-size: 24px !important;
+}
