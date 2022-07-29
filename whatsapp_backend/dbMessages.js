@@ -7,4 +7,5 @@ const whatsappSchema = mongoose.Schema({
     received: Boolean,
 });
 
-export default mongoose.model('messageContent', whatsappSchema);
+//collection and its name should be plural
+export default mongoose.model('messagecontents', whatsappSchema);

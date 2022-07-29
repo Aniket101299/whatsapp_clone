@@ -2,6 +2,8 @@
 import express from 'express';
 import mongoose from "mongoose";
 import Messages from "./dbMessages.js";
+import Pusher from "pusher";
+import cors from "cors";
 
 // app config
 const app = express();
@@ -18,6 +20,8 @@ const pusher = new Pusher({
 
 // middleware
 app.use(express.json());
+app.use(cors());
+
 
 // DB config
 const connection_url = "mongodb+srv://aniket:Aniketwhatsapp@cluster0.k6cw6vn.mongodb.net/whatsappdb?retryWrites=true&w=majority";
@@ -27,7 +31,30 @@ mongoose.connect(connection_url, {
     useUnifiedTopology: true
 });
 
-// ???
+
+const db = mongoose.connection;
+
+db.once("open", () => {
+    console.log("DB connected");
+    const msgCollection = db.collection("messagecontents");
+    const changeStream = msgCollection.watch();
+
+    changeStream.on("change", (change) => {
+        console.log(change);
+
+        if(change.operationType === "insert") {
+            const messageDetails = change.fullDocument;
+            pusher.trigger("messages", "inserted", {
+                name: messageDetails.name,
+                message: messageDetails.message,
+            });
+        } else {
+            console.log("Error triggering Pusher");
+        }
+    });
+});
+
+
 
 // api routes
 app.get("/", (req, res) => res.status(200).send("hi"));
